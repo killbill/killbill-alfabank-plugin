@@ -10,13 +10,15 @@ module Killbill #:nodoc:
 
         super(gateway_builder,
               :alfabank,
-              Killbill::Alfabank::AlfabankPaymentMethod,
-              Killbill::Alfabank::AlfabankTransaction,
-              Killbill::Alfabank::AlfabankResponse)
+              ::Killbill::Alfabank::AlfabankPaymentMethod,
+              ::Killbill::Alfabank::AlfabankTransaction,
+              ::Killbill::Alfabank::AlfabankResponse)
       end
 
       def process_payment(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, context)
-        # TODO
+        # Pass extra parameters for the gateway here
+        options = {}
+        super(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, context, options)
       end
 
       def get_payment_info(kb_account_id, kb_payment_id, context)
@@ -28,7 +30,9 @@ module Killbill #:nodoc:
       end
 
       def process_refund(kb_account_id, kb_payment_id, refund_amount, currency, context)
-        # TODO
+        # Pass extra parameters for the gateway here
+        options = {}
+        super(kb_account_id, kb_payment_id, refund_amount, currency, context, options)
       end
 
       def get_refund_info(kb_account_id, kb_payment_id, context)

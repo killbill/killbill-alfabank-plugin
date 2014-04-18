@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(:version => 20140410153635) do
     t.integer  "alfabank_response_id",  :null => false
     t.string   "api_call",                       :null => false
     t.string   "kb_payment_id",                  :null => false
-    t.string   "alfabank_txn_id"        # alfabank transaction id
+    t.string   "txn_id"                          # alfabank transaction id
     t.integer  "amount_in_cents",                :null => false
     t.string   "currency",                       :null => false
     t.datetime "created_at",                     :null => false
