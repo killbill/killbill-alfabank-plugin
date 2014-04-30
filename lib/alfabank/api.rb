@@ -72,11 +72,7 @@ module Killbill #:nodoc:
       end
 
       def add_payment_method(kb_account_id, kb_payment_method_id, payment_method_props, set_default, properties, context)
-        # Pass extra parameters for the gateway here
-        options = {}
-
-        properties = merge_properties(properties, options)
-        super(kb_account_id, kb_payment_method_id, payment_method_props, set_default, properties, context)
+        # Nothing to do
       end
 
       def delete_payment_method(kb_account_id, kb_payment_method_id, properties, context)
