@@ -15,90 +15,124 @@ module Killbill #:nodoc:
               ::Killbill::Alfabank::AlfabankResponse)
       end
 
-      def authorize_payment(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, context)
+      def authorize_payment(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        super(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, context, options)
+
+        properties = merge_properties(properties, options)
+        super(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, properties, context)
       end
 
-      def capture_payment(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, context)
+      def capture_payment(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        super(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, context, options)
+
+        properties = merge_properties(properties, options)
+        super(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, properties, context)
       end
 
-      def void_payment(kb_account_id, kb_payment_id, kb_payment_method_id, context)
+      def void_payment(kb_account_id, kb_payment_id, kb_payment_method_id, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        super(kb_account_id, kb_payment_id, kb_payment_method_id, context, options)
+
+        properties = merge_properties(properties, options)
+        super(kb_account_id, kb_payment_id, kb_payment_method_id, properties, context)
       end
 
-      def process_payment(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, context)
+      def process_payment(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        super(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, context, options)
+
+        properties = merge_properties(properties, options)
+        super(kb_account_id, kb_payment_id, kb_payment_method_id, amount, currency, properties, context)
       end
 
-      def get_payment_info(kb_account_id, kb_payment_id, context)
+      def get_payment_info(kb_account_id, kb_payment_id, properties, context)
         super
       end
 
-      def search_payments(search_key, offset, limit, context)
+      def search_payments(search_key, offset, limit, properties, context)
         super
       end
 
-      def process_refund(kb_account_id, kb_payment_id, refund_amount, currency, context)
+      def process_refund(kb_account_id, kb_payment_id, refund_amount, currency, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        super(kb_account_id, kb_payment_id, refund_amount, currency, context, options)
+
+        properties = merge_properties(properties, options)
+        super(kb_account_id, kb_payment_id, refund_amount, currency, properties, context)
       end
 
-      def get_refund_info(kb_account_id, kb_payment_id, context)
+      def get_refund_info(kb_account_id, kb_payment_id, properties, context)
         super
       end
 
-      def search_refunds(search_key, offset, limit, context)
+      def search_refunds(search_key, offset, limit, properties, context)
         super
       end
 
-      def add_payment_method(kb_account_id, kb_payment_method_id, payment_method_props, set_default, context)
+      def add_payment_method(kb_account_id, kb_payment_method_id, payment_method_props, set_default, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        super(kb_account_id, kb_payment_method_id, payment_method_props, set_default, context, options)
+
+        properties = merge_properties(properties, options)
+        super(kb_account_id, kb_payment_method_id, payment_method_props, set_default, properties, context)
       end
 
-      def delete_payment_method(kb_account_id, kb_payment_method_id, context)
+      def delete_payment_method(kb_account_id, kb_payment_method_id, properties, context)
         # Pass extra parameters for the gateway here
         options = {}
-        super(kb_account_id, kb_payment_method_id, context, options)
+
+        properties = merge_properties(properties, options)
+        super(kb_account_id, kb_payment_method_id, properties, context)
       end
 
-      def get_payment_method_detail(kb_account_id, kb_payment_method_id, context)
+      def get_payment_method_detail(kb_account_id, kb_payment_method_id, properties, context)
         super
       end
 
-      def set_default_payment_method(kb_account_id, kb_payment_method_id, context)
+      def set_default_payment_method(kb_account_id, kb_payment_method_id, properties, context)
         # TODO
       end
 
-      def get_payment_methods(kb_account_id, refresh_from_gateway, context)
+      def get_payment_methods(kb_account_id, refresh_from_gateway, properties, context)
         super
       end
 
-      def search_payment_methods(search_key, offset, limit, context)
+      def search_payment_methods(search_key, offset, limit, properties, context)
         super
       end
 
-      def reset_payment_methods(kb_account_id, payment_methods)
+      def reset_payment_methods(kb_account_id, payment_methods, properties, context)
         super
       end
 
-      def build_form_descriptor(kb_account_id, descriptor_fields, context)
-        super
+      def build_form_descriptor(kb_account_id, descriptor_fields, properties, context)
+        # Pass extra parameters for the gateway here
+        options = {}
+        properties = merge_properties(properties, options)
+
+        # Add your custom static hidden tags here
+        options = {
+            #:token => config[:alfabank][:token]
+        }
+        descriptor_fields = merge_properties(descriptor_fields, options)
+
+        super(kb_account_id, descriptor_fields, properties, context)
       end
 
-      def process_notification(notification, context)
-        super
+      def process_notification(notification, properties, context)
+        # Pass extra parameters for the gateway here
+        options = {}
+        properties = merge_properties(properties, options)
+
+        super(notification, properties, context) do |gw_notification, service|
+          # Retrieve the payment
+          # gw_notification.kb_payment_id =
+          #
+          # Set the response body
+          # gw_notification.entity =
+        end
       end
     end
   end

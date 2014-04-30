@@ -16,10 +16,11 @@ describe Killbill::Alfabank::PaymentPlugin do
       eos
       file.close
 
-      @plugin = Killbill::Alfabank::PaymentPlugin.new
-      @plugin.logger = Logger.new(STDOUT)
+      @plugin              = Killbill::Alfabank::PaymentPlugin.new
+      @plugin.logger       = Logger.new(STDOUT)
       @plugin.logger.level = Logger::INFO
-      @plugin.conf_dir = File.dirname(file)
+      @plugin.conf_dir     = File.dirname(file)
+      @plugin.kb_apis      = Killbill::Plugin::KillbillApi.new('alfabank', {})
 
       # Start the plugin here - since the config file will be deleted
       @plugin.start_plugin
