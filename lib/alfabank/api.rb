@@ -5,7 +5,7 @@ module Killbill #:nodoc:
       def initialize
         gateway_builder = Proc.new do |config|
           ::ActiveMerchant::Billing::AlfabankGateway.new :account => config[:account],
-                                                         :secret => config[:secret]
+                                                         :secret  => config[:secret]
         end
 
         super(gateway_builder,
@@ -104,22 +104,24 @@ module Killbill #:nodoc:
       end
 
       def build_form_descriptor(kb_account_id, descriptor_fields, properties, context)
-        # Pass extra parameters for the gateway here
-        options = {}
-        properties = merge_properties(properties, options)
+        options                  = properties_to_hash(descriptor_fields)
+        gw_response              = gateway.make_order(options)
+        response, transaction    = save_response_and_transaction gw_response, :build_form_descriptor, kb_account_id, context.tenant_id
 
-        # Add your custom static hidden tags here
-        options = {
-            #:token => config[:alfabank][:token]
-        }
-        descriptor_fields = merge_properties(descriptor_fields, options)
+        # Build the response object
+        descriptor               = ::Killbill::Plugin::Model::HostedPaymentPageFormDescriptor.new
+        descriptor.kb_account_id = kb_account_id
+        descriptor.form_method   = 'GET'
+        descriptor.form_url      = gw_response.params['form_url']
+        descriptor.form_fields   = hash_to_properties({})
+        descriptor.properties    = hash_to_properties(gw_response.params)
 
-        super(kb_account_id, descriptor_fields, properties, context)
+        descriptor
       end
 
       def process_notification(notification, properties, context)
         # Pass extra parameters for the gateway here
-        options = {}
+        options    = {}
         properties = merge_properties(properties, options)
 
         super(notification, properties, context) do |gw_notification, service|
